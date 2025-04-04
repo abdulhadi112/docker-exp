@@ -1,1 +1,1 @@
-# docker-exp
+### docker compose up --build -d
