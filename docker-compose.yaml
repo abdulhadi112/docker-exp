@@ -1,0 +1,38 @@
+services:
+  notesapp:
+    build: .
+    ports:
+      - 5000:3000
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - KEY="jhbjsagasdlkzxmdch892374anmsdad"
+      - APP_PORT=3000
+      - DB_HOST=database
+      - DB_USER=root
+      - DB_PASS=test123
+      - DB_DATABASE=notes
+    networks:
+      - notesnw
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=test123
+      - MYSQL_DATABASE=notes
+    hostname: database
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+      - notesnw
+
+networks:
+  notesnw:
+# For security purposes hum har ek app ko different network
+
+# If we want the data to presist event after container deletion we use volume
+
+# -v shibudata: /var/lib/mysql. Yeh docker manage bhi karta hai.
+# Entries ,dockerfile, dockercompose

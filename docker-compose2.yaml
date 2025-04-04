@@ -1,0 +1,38 @@
+services:
+  notesapp:
+    build: . # Current directory mein file hai
+    ports: #Port forwarding
+      - 8000:3000 # Container ka 3000 bahar 8000 rahega
+    depends_on: # iska matlab hai ki pehle 'serviceName' run hoga phir yeh notesapp
+      - db
+    restart: always
+    environment:
+      - KEY="jhbjsagasdlkzxmdch892374anmsdad"
+      - APP_PORT=3000
+      - DB_HOST=database #DB container ka ip address, so give db container a host name
+      - DB_USER=root
+      - DB_PASS=test123
+      - DB_DATABASE=notes
+    networks:
+      - notesnw
+
+  db:
+    image: mysql
+    restart: always #Whenever I reboot my system i also want my database to restart.Container ka state save karke rakhte hai taaki boot fast ho
+    environment:
+      - MYSQL_ROOT_PASSWORD=test123 #User root hai is DB_USER=root
+      - MYSQL_DATABASE=notes
+    hostname: database
+    volumes:
+      - ./data:/var/lib/mysql #Manual se pata chala ki where mysql data is store. RHS se LHS par data saved rahega even if the container is stopped. Is data ko hum manually bhi kar sakte hai. Other way se database docker manage karta hai, getting its backup is bit difficult
+    networks:
+      - notesnw
+
+networks:
+  notesnw:
+# For security purposes hum har ek app ko different network
+
+# If we want the data to presist event after container deletion we use volume
+
+# -v shibudata: /var/lib/mysql. Yeh docker manage bhi karta hai.
+# Entries ,dockerfile, dockercompose
